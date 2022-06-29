@@ -14,13 +14,13 @@ PIXEL_OFFSET = 10
 PIXELS_PER_METER = 5
 
 
-def world_to_pixel(x, y, ox, oy, ori_ox, ori_oy, pixels_per_meter=5, offset=(-80, 160), size=320, angle_jitter=15):
+def world_to_pixel(x, y, ox, oy, ori_ox, ori_oy, pixels_per_meter=5, offset=(-64, 128), size=256, angle_jitter=15):
     pixel_dx, pixel_dy = (x - ox) * pixels_per_meter, (y - oy) * pixels_per_meter
 
     pixel_x = pixel_dx * ori_ox + pixel_dy * ori_oy
     pixel_y = -pixel_dx * ori_oy + pixel_dy * ori_ox
 
-    pixel_x = 320 - pixel_x
+    pixel_x = 256 - pixel_x
 
     return np.array([pixel_x, pixel_y]) + offset
 
@@ -30,7 +30,7 @@ class LBCBirdViewDataset(Dataset):
     def __init__(
             self,
             root_dir,
-            img_size=320,
+            img_size=256,
             crop_size=192,
             gap=5,
             n_step=5,
@@ -94,7 +94,7 @@ class LBCBirdViewDataset(Dataset):
         episode_index = self._idx_list[index]
 
         birdview = np.frombuffer(lmdb_txn.get(('birdview_%05d' % episode_index).encode()),
-                                 np.uint8).reshape(320, 320, 7)
+                                 np.uint8).reshape(256, 256, 7)
         measurement = np.frombuffer(lmdb_txn.get(('measurements_%05d' % episode_index).encode()), np.float32)
         #print(png_file)
         #rgb_image = read_image(png_file).reshape(160, 384, 3)
@@ -113,9 +113,8 @@ class LBCBirdViewDataset(Dataset):
         o_camx = ox + ori_ox * 2
         o_camy = oy + ori_oy * 2
 
-        pixel_ox = 160
-        pixel_oy = 260
-
+        pixel_ox = 128
+        pixel_oy = 228
         birdview = cv2.warpAffine(
             birdview,
             cv2.getRotationMatrix2D((pixel_ox, pixel_oy), delta_angle, 1.0),
@@ -124,7 +123,7 @@ class LBCBirdViewDataset(Dataset):
         )
 
         # random cropping
-        center_x, center_y = 160, 260 - self._crop_size // 2
+        center_x, center_y = 128, 228 - self._crop_size // 2
         birdview = birdview[dy + center_y - self._crop_size // 2:dy + center_y + self._crop_size // 2,
                             dx + center_x - self._crop_size // 2:dx + center_x + self._crop_size // 2]
 
@@ -180,7 +179,7 @@ class LBCImageDataset(Dataset):
         self,
         root_dir,
         rgb_shape=(160, 384, 3),
-        img_size=320,
+        img_size=256,
         crop_size=192,
         gap=5,
         n_step=5,
@@ -246,10 +245,10 @@ class LBCImageDataset(Dataset):
         png_file = self._img_list[index]
 
         birdview = np.frombuffer(lmdb_txn.get(('birdview_%05d' % episode_index).encode()),
-                                 np.uint8).reshape(320, 320, 7)
+                                 np.uint8).reshape(256, 256, 7)
         measurement = np.frombuffer(lmdb_txn.get(('measurements_%05d' % episode_index).encode()), np.float32)
         #print(png_file)
-        rgb_image = read_image(png_file).reshape(160, 384, 3)
+        rgb_image = read_image(png_file).reshape(256, 256, 3)
 
         if self.augmenter:
             rgb_images = [

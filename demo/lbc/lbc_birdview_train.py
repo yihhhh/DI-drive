@@ -18,7 +18,7 @@ lbc_config = dict(
     exp_name='lbc_bev_train',
     data=dict(
         train=dict(
-            root_dir='lbc_train',
+            root_dir='./datasets_train/lbc_datasets_train',
             gap=5,
             n_step=5,
             crop_x_jitter=5,
@@ -26,7 +26,7 @@ lbc_config = dict(
             angle_jitter=5,
         ),
         val=dict(
-            root_dir='lbc_val',
+            root_dir='./datasets_train/lbc_datasets_val',
             crop_x_jitter=0,
             crop_y_jitter=0,
             angle_jitter=0,
@@ -38,7 +38,7 @@ lbc_config = dict(
         learn=dict(
             epoches=1000,
             log_freq=1000,
-            batch_size=128,
+            batch_size=8,
             loss='l1',
             lr=1e-4,
         ),
@@ -140,10 +140,10 @@ def main(cfg):
     train_dataset = LBCBirdViewDataset(**cfg.data.train)
     val_dataset = LBCBirdViewDataset(**cfg.data.val)
     train_dataloader = DataLoader(
-        train_dataset, cfg.policy.learn.batch_size, num_workers=16, shuffle=True, drop_last=True, pin_memory=True
+            train_dataset, cfg.policy.learn.batch_size, num_workers=16, shuffle=True, drop_last=True, pin_memory=False
     )
     val_dataloader = DataLoader(
-        val_dataset, cfg.policy.learn.batch_size, num_workers=16, shuffle=False, drop_last=False, pin_memory=True
+        val_dataset, cfg.policy.learn.batch_size, num_workers=16, shuffle=False, drop_last=False, pin_memory=False
     )
 
     lbc_policy = LBCBirdviewPolicy(cfg.policy)

@@ -16,23 +16,23 @@ from core.simulators.carla_data_provider import CarlaDataProvider
 from ding.utils.default_helper import deep_merge_dicts
 
 DEFAULT_CAMERA_CONFIG = {
-    'size': [384, 160],
+    'size': [800, 600],
     'fov': 90,
-    'position': [2.0, 0.0, 1.4],
+    'position': [0.0, 0.0, 0.0],
     'rotation': [0, 0, 0],
 }
 
 DEFAULT_CAMERA_AUG_CONFIG = {'position_range': [0, 0, 0], 'rotation_range': [0, 0, 0]}
 
 DEFAULT_LIDAR_CONFIG = {
-    'channels': 1,
-    'range': 2000,
-    'points_per_second': 1000,
+    'channels': 32,
+    'range': 10,
+    'points_per_second': 56000,
     'rotation_frequency': 10,
-    'upper_fov': -3,
-    'lower_fov': -3,
-    'position': [0, 0.0, 1.4],
-    'rotation': [0, -90, 0],
+    'upper_fov': 10,
+    'lower_fov': -30,
+    'position': [0, 0.0, 0.0],
+    'rotation': [0, 0, 0],
     'draw': False,
 }
 
@@ -271,8 +271,12 @@ class CallBack(object):
         """
         points = np.frombuffer(lidar_data.raw_data, dtype=np.dtype('f4'))
         points = copy.deepcopy(points)
-        points = np.reshape(points, (int(points.shape[0] / 3), 3))
-        self._data_wrapper.update_sensor(tag, points, lidar_data.frame)
+        points = np.reshape(points, (int(points.shape[0] / 4), 4))
+        x = points[:, 0:1]
+        y = points[:, 1:2]
+        z = points[:, 2:3]
+        point_cloud = np.concatenate([x, y, z], axis=1)
+        self._data_wrapper.update_sensor(tag, point_cloud, lidar_data.frame)
 
     def _parse_gnss_cb(self, gnss_data: Any, tag: str) -> None:
         """

@@ -43,6 +43,7 @@ def main(cfg, seed=0):
     cfg.env.manager = deep_merge_dicts(SyncSubprocessEnvManager.default_config(), cfg.env.manager)
 
     tcp_list = parse_carla_tcp(cfg.server)
+    tcp_list = [('localhost', 9000), ('localhost', 9010), ('localhost', 2000)]
     env_num = cfg.env.env_num
     assert len(tcp_list) >= env_num, \
         "Carla server not enough! Need {} servers but only found {}.".format(env_num, len(tcp_list))

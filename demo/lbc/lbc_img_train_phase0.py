@@ -17,14 +17,15 @@ lbc_config = dict(
     exp_name='lbc_img_train_p0',
     data=dict(
         train=dict(
-            root_dir='lbc_datasets_train',
+            root_dir='./datasets_train/lbc_datasets_train',
             gap=5,
             n_step=5,
         ),
         val=dict(
-            root_dir='lbc_datasets_val',
+            root_dir='./datasets_train/lbc_datasets_val',
             gap=5,
             n_step=5,
+            img_size=256,
         ),
     ),
     policy=dict(
@@ -45,10 +46,10 @@ lbc_config = dict(
         gap=5,
         dt=0.1,
         camera_args=dict(
-            w=384,
-            h=160,
-            fov=90,
-            world_y=1.4,
+            w=256,
+            h=256,
+            fov=110,
+            world_y=1.7,
             fixed_offset=4.0,
             n_step=5,
             crop_size=192,

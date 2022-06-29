@@ -13,7 +13,7 @@ from torch.utils.data import DataLoader, WeightedRandomSampler
 from torchvision.utils import save_image
 
 from core.data.cict_dataset import PathDataset
-from demo.cict_demo.cict_model import ModelGRU
+from cict_model import ModelGRU
 #from core.utils.learner_utils.loss_utils import Loss
 #from core.utils.learner_utils.optim_utils import adjust_learning_rate_auto
 from core.utils.others.checkpoint_helper import is_ready_to_save, get_latest_saved_checkpoint
@@ -35,7 +35,7 @@ train_config = dict(
     EVAL=False,
     SAVE_INTERVAL=1000,
     MAX_CKPT_SAVE_NUM=40,
-    N_EPOCHS=80,
+    N_EPOCHS=200,
     SPEED_FACTOR=25.0,
     TRAIN_DATASET_NAME='cict_datasets_train',
     MODEL_TYPE='cict_traj',

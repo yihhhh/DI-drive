@@ -13,7 +13,7 @@ from PIL import Image
 from torch.utils.data import DataLoader
 
 from core.data.cict_dataset import PathDataset
-from demo.cict_demo.cict_model import ModelGRU
+from cict_model import ModelGRU
 from core.utils.others.checkpoint_helper import get_latest_saved_checkpoint
 
 eval_config = dict(

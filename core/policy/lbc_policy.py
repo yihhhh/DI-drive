@@ -155,7 +155,7 @@ class LBCBirdviewPolicy(BaseCarlaPolicy):
 
         data = default_collate(list(data.values()))
 
-        birdview = to_dtype(data['birdview'], dtype=torch.float32).permute(0, 3, 1, 2)
+        birdview = to_dtype(data['birdview'], dtype=torch.float32).permute(0, 3, 2, 1)
         speed = data['speed']
         command_index = [i.item() - 1 for i in data['command']]
         command = self._one_hot[command_index]

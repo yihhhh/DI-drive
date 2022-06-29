@@ -78,10 +78,8 @@ ppo_config = dict(
         ),
         collect=dict(
             # n_sample=3000,
-            n_episode=8,
-            collector=dict(
+            collector=dict(    
                 collect_print_freq=1000,
-                get_train_sample=True,
                 deepcopy_obs=True,
                 transform_obs=True,
             ),

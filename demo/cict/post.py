@@ -11,7 +11,7 @@ from collect_pm import CollectPerspectiveImage, InversePerspectiveMapping
 
 config = dict(
     env=dict(
-        env_num=5,
+        env_num=3,
         simulator=dict(
             disable_two_wheels=True,
             waypoint_num=32,
@@ -25,20 +25,29 @@ config = dict(
                     type='rgb',
                     size=[640, 360],
                     position=[0.5, 0.0, 2.5],
+                    # size=[256, 256],
+                    # position=[0.8, 0.0, 1.7],
                     rotation=[0, 0, 0],
                     sensor_tick=1. / 30,
+                    # sensor_tick=0.02,
+                    fov=110,
                 ),
                 dict(
                     name='lidar',
                     type='lidar',
                     channels=64,
+                    # channels=32,
                     range=50,
-                    points_per_second=100000,
-                    rotation_frequency=30,
-                    upper_fov=10,
-                    lower_fov=-30,
+
+                    points_per_second=320000,
+                    rotation_frequency=20,
+                    upper_fov=2.0,
+                    lower_fov=-26.8,
                     position=[0.5, 0.0, 2.5],
+
+                    # position=[0.0, 0.0, 2.1],
                     rotation=[0, 0, 0],
+
                     sensor_tick=0.05,
                 )
             ),
@@ -55,15 +64,15 @@ config = dict(
         wrapper=dict(suite='FullTown01-v3', ),
     ),
     server=[
-        dict(carla_host='localhost', carla_ports=[9000, 9010, 2]),
+        dict(carla_host='localhost', carla_ports=[9000, 9010, 2000]),
     ],
     policy=dict(
         target_speed=25,
         noise=False,
         collect=dict(
             n_episode=5,
-            dir_path='datasets/cict_datasets_train',
-            npy_prefix='_preloads',
+            dir_path='datasets_di/cict_datasets_train',
+            npy_prefix='_preloads_di',
             collector=dict(suite='FullTown01-v3', ),
         ),
     ),
@@ -85,8 +94,8 @@ lateral_sample_number = 20
 lateral_step_factor = 1.0
 ksize = 21
 
+# sensor_config = {'rgb': {'img_height': 256, 'img_width': 256, 'fov': 110, 'location': [0.8, 0.0, 1.7]}}
 sensor_config = {'rgb': {'img_height': 360, 'img_width': 640, 'fov': 120, 'location': [0.5, 0, 2.5]}}
-
 
 class Param(object):
 

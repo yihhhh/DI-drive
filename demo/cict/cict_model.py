@@ -1,14 +1,14 @@
 import os
 
 from torchvision.transforms.transforms import ToTensor
-from demo.cict_demo.post import Sensor, params
+from post import Sensor, params
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.autograd import grad
 import torchvision.transforms as transforms
 import cv2
-from demo.cict_demo.collect_pm import InversePerspectiveMapping
+from collect_pm import InversePerspectiveMapping
 import carla
 import numpy as np
 

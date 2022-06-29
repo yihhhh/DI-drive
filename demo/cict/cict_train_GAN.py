@@ -12,7 +12,7 @@ from torch.utils.data import DataLoader, WeightedRandomSampler
 from torchvision.transforms.transforms import Grayscale
 
 from core.data.cict_dataset import CictDataset
-from demo.cict_demo.cict_model import GeneratorUNet, Discriminator
+from cict_model import GeneratorUNet, Discriminator
 from core.utils.learner_utils.loss_utils import Loss
 #from core.utils.learner_utils.optim_utils import adjust_learning_rate_auto
 from core.utils.others.checkpoint_helper import is_ready_to_save, get_latest_saved_checkpoint
@@ -22,7 +22,8 @@ train_config = dict(
     NUMBER_OF_LOADING_WORKERS=4,
     IMG_HEIGHT=128,
     IMG_WIDTH=256,
-    SENSORS=dict(rgb=[3, 360, 640]),
+    SENSORS=dict(rgb=[3, 256, 256]),
+    # SENSORS=dict(rgb=[3, 360, 640]),
     DEST=0,  # choose bird-view destination (0) or camera-view destination (1)
     START_EPISODE=0,  # set which episodes for training
     END_EPISODE=37,

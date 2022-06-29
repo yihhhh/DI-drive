@@ -16,7 +16,7 @@ from core.utils.others.tcp_helper import parse_carla_tcp
 
 config = dict(
     env=dict(
-        env_num=5,
+        env_num=3,
         simulator=dict(
             disable_two_wheels=True,
             planner=dict(
@@ -29,16 +29,17 @@ config = dict(
                 dict(
                     name='rgb',
                     type='rgb',
-                    size=[384, 160],
-                    position=[2.0, 0.0, 1.4],
-                    fov=90,
+                    size=[256, 256],
+                    position=[0.8, 0.0, 1.7],
+                    fov=110,
+                    sensor_tick=0.02,
                 ),
                 dict(
                     name='birdview',
                     type='bev',
-                    size=[320, 320],
-                    pixels_per_meter=5,
-                    pixels_ahead_vehicle=100,
+                    size=[256, 256],
+                    pixels_per_meter=8,
+                    pixels_ahead_vehicle=32,
                 ),
             ),
             verbose=True,
@@ -54,7 +55,7 @@ config = dict(
         ),
     ),
     server=[
-        dict(carla_host='localhost', carla_ports=[5000, 5010, 2]),
+        dict(carla_host='localhost', carla_ports=[9000, 9010, 2000]),
     ],
     policy=dict(
         target_speed=25,
@@ -63,7 +64,7 @@ config = dict(
         noise=True,
         noise_kwargs=dict(),
         collect=dict(
-            dir_path='./datasets_train/lbc_datasets_train',
+            dir_path='./datasets_train/lbc_datasets_val',
             n_episode=100,
             collector=dict(
                 suite='FullTown01-v1',
@@ -92,6 +93,7 @@ def main(cfg, seed=0):
     cfg.env.manager = deep_merge_dicts(SyncSubprocessEnvManager.default_config(), cfg.env.manager)
 
     tcp_list = parse_carla_tcp(cfg.server)
+    tcp_list = [('localhost', 9000), ('localhost', 9010), ('localhost', 9020)]
     env_num = cfg.env.env_num
 
     collector_env = SyncSubprocessEnvManager(

@@ -36,7 +36,6 @@ class ScenarioCarlaEnv(BaseDriveEnv):
 
     action_space = spaces.Dict({})
     observation_space = spaces.Dict({})
-    reward_space = spaces.Box(low=-float('inf'), high=float('inf'), shape=(1, ))
     config = dict(
         simulator=dict(),
         # reward value if success

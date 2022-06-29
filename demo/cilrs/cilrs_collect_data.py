@@ -16,7 +16,7 @@ from core.utils.others.tcp_helper import parse_carla_tcp
 
 config = dict(
     env=dict(
-        env_num=5,
+        env_num=3,
         simulator=dict(
             disable_two_wheels=True,
             planner=dict(
@@ -27,9 +27,10 @@ config = dict(
                 dict(
                     name='rgb',
                     type='rgb',
-                    size=[400, 300],
-                    position=[1.3, 0.0, 2.3],
-                    fov=100,
+                    size=[256, 256],
+                    position=[0.8, 0.0, 1.7],
+                    fov=110,
+                    sensor_tick=0.02,
                 ),
             ),
             verbose=True,
@@ -50,7 +51,7 @@ config = dict(
         ),
     ),
     server=[
-        dict(carla_host='localhost', carla_ports=[9000, 9010, 2]),
+        dict(carla_host='localhost', carla_ports=[9000, 9010, 2000]),
     ],
     policy=dict(
         target_speed=25,
@@ -59,10 +60,10 @@ config = dict(
         noise_kwargs=dict(),
         collect=dict(
             n_episode=100,
-            dir_path='./datasets_train/cilrs_datasets_train',
-            preloads_name='cilrs_datasets_train.npy',
+            dir_path='./datasets_train/cilrs_datasets_val',
+            preloads_name='cilrs_datasets_val.npy',
             collector=dict(
-                suite='FullTown01-v1',
+                suite='FullTown02-v1',
                 nocrash=True,
             ),
         )
@@ -74,7 +75,7 @@ main_config = EasyDict(config)
 
 def cilrs_postprocess(observasion, scale=1, crop=256):
     rgb = observasion['rgb'].copy()
-    im = PIL.Image.fromarray(rgb)
+    im = PIL.Image.fromarray((rgb).astype(np.uint8))
     (width, height) = (int(im.width // scale), int(im.height // scale))
     rgb = im.resize((width, height))
     rgb = np.asarray(rgb)
@@ -126,6 +127,9 @@ def main(cfg, seed=0):
     cfg.env.manager = deep_merge_dicts(SyncSubprocessEnvManager.default_config(), cfg.env.manager)
 
     tcp_list = parse_carla_tcp(cfg.server)
+    print(tcp_list)
+    tcp_list = [('localhost', 9000), ('localhost', 9010), ('localhost', 2000)]
+    print(tcp_list)
     env_num = cfg.env.env_num
     assert len(tcp_list) >= env_num, \
         "Carla server not enough! Need {} servers but only found {}.".format(env_num, len(tcp_list))
